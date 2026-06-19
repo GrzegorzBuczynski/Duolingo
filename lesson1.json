@@ -1,0 +1,20 @@
+{
+    "lessonTitle": "Lekcja 1: Podstawowe zwroty",
+    "questions": [
+        {
+            "question": "Jak jest po angielsku 'Cześć'?",
+            "options": ["Hello", "Goodbye", "Please", "Thanks"],
+            "correct": "Hello"
+        },
+        {
+            "question": "Jak jest po angielsku 'Dziękuję'?",
+            "options": ["Sorry", "Thank you", "Yes", "No"],
+            "correct": "Thank you"
+        },
+        {
+            "question": "Jak jest po angielsku 'Tak'?",
+            "options": ["No", "Maybe", "Yes", "Please"],
+            "correct": "Yes"
+        }
+    ]
+}

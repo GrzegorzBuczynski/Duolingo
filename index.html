@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MojeLingo - Nauka języka</title>
+    <style>
+        :root {
+            --primary: #58cc02;
+            --primary-dark: #58a700;
+            --error: #ff4b4b;
+            --bg: #fff;
+            --text: #3c3c3c;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f7f7f7;
+            color: var(--text);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+        .app-container {
+            background: var(--bg);
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            padding: 30px;
+            width: 100%;
+            max-width: 450px;
+            text-align: center;
+        }
+        .progress-bar {
+            width: 100%;
+            height: 12px;
+            background-color: #e5e5e5;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+        .progress-fill {
+            height: 100%;
+            background-color: var(--primary);
+            width: 0%;
+            transition: width 0.3s ease;
+            border-radius: 6px;
+        }
+        h2 {
+            color: var(--text);
+            font-size: 20px;
+            margin-bottom: 10px;
+        }
+        .question {
+            font-size: 28px;
+            font-weight: bold;
+            margin: 20px 0;
+        }
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .btn {
+            padding: 15px;
+            border: 2px solid #e5e5e5;
+            background: var(--bg);
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: bold;
+            color: var(--text);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .btn:hover {
+            border-color: #b0b0b0;
+        }
+        .btn.correct {
+            border-color: var(--primary);
+            background-color: #d7ffb8;
+            color: var(--primary-dark);
+        }
+        .btn.incorrect {
+            border-color: var(--error);
+            background-color: #ffdada;
+            color: var(--error);
+        }
+        .btn:disabled {
+            cursor: not-allowed;
+        }
+        .submit-btn {
+            width: 100%;
+            padding: 15px;
+            background-color: #e5e5e5;
+            color: #afafaf;
+            border: none;
+            border-radius: 12px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        .submit-btn.active {
+            background-color: var(--primary);
+            color: white;
+            box-shadow: 0 4px 0 var(--primary-dark);
+        }
+        .feedback {
+            margin-top: 15px;
+            padding: 10px;
+            border-radius: 8px;
+            font-weight: bold;
+            display: none;
+        }
+        .feedback.correct {
+            background-color: #e7f9d4;
+            color: var(--primary-dark);
+            display: block;
+        }
+        .feedback.incorrect {
+            background-color: #ffdada;
+            color: var(--error);
+            display: block;
+        }
+    </style>
+</head>
+<body>
+
+<div class="app-container">
+    <div class="progress-bar">
+        <div class="progress-fill" id="progressFill"></div>
+    </div>
+    
+    <h2 id="lessonTitle">Ładowanie lekcji...</h2>
+    <div class="question" id="questionText">Proszę czekać</div>
+    
+    <div class="options-grid" id="optionsContainer"></div>
+    
+    <div class="feedback" id="feedback"></div>
+    
+    <button class="submit-btn" id="submitBtn" disabled>Sprawdź</button>
+</div>
+
+<script>
+    let currentLesson = 1;
+    let currentQuestionIndex = 0;
+    let lessonData = null;
+    let selectedAnswer = null;
+    let isAnswered = false;
+
+    const lessonTitle = document.getElementById('lessonTitle');
+    const questionText = document.getElementById('questionText');
+    const optionsContainer = document.getElementById('optionsContainer');
+    const submitBtn = document.getElementById('submitBtn');
+    const feedback = document.getElementById('feedback');
+    const progressFill = document.getElementById('progressFill');
+
+    // Funkcja wczytująca plik JSON
+    async function loadLesson(lessonNumber) {
+        try {
+            const response = await fetch(`lesson${lessonNumber}.json`);
+            if (!response.ok) {
+                // Jeśli nie ma kolejnego pliku JSON, zakończ kurs
+                finishCourse();
+                return;
+            }
+            lessonData = await response.json();
+            currentQuestionIndex = 0;
+            lessonTitle.innerText = lessonData.lessonTitle;
+            loadQuestion();
+        } catch (error) {
+            console.error("Błąd wczytywania lekcji:", error);
+            finishCourse();
+        }
+    }
+
+    // Funkcja ładująca pojedyncze pytanie
+    function loadQuestion() {
+        isAnswered = false;
+        selectedAnswer = null;
+        
+        // Aktualizacja paska postępu
+        const progress = (currentQuestionIndex / lessonData.questions.length) * 100;
+        progressFill.style.width = `${progress}%`;
+
+        const q = lessonData.questions[currentQuestionIndex];
+        questionText.innerText = q.question;
+
+        // Wyczyszczenie poprzednich opcji i feedbacku
+        optionsContainer.innerHTML = '';
+        feedback.className = 'feedback';
+        feedback.innerText = '';
+        submitBtn.innerText = 'Sprawdź';
+        submitBtn.disabled = true;
+        submitBtn.classList.remove('active');
+
+        // Tworzenie przycisków z odpowiedziami
+        q.options.forEach(option => {
+            const btn = document.createElement('button');
+            btn.innerText = option;
+            btn.classList.add('btn');
+            btn.onclick = () => selectAnswer(btn, option);
+            optionsContainer.appendChild(btn);
+        });
+    }
+
+    // Funkcja zaznaczająca odpowiedź
+    function selectAnswer(btnElement, answer) {
+        if (isAnswered) return; // Blokada po odpowiedzi
+
+        selectedAnswer = answer;
+        
+        // Odznacz wszystkie, zaznacz wybraną
+        const allBtns = optionsContainer.querySelectorAll('.btn');
+        allBtns.forEach(b => {
+            b.style.backgroundColor = '';
+            b.style.borderColor = '#e5e5e5';
+        });
+        btnElement.style.borderColor = '#b0b0b0';
+        btnElement.style.backgroundColor = '#f0f0f0';
+
+        submitBtn.disabled = false;
+        submitBtn.classList.add('active');
+    }
+
+    // Funkcja sprawdzająca odpowiedź
+    function checkAnswer() {
+        if (!selectedAnswer) return;
+
+        isAnswered = true;
+        const q = lessonData.questions[currentQuestionIndex];
+        const allBtns = optionsContainer.querySelectorAll('.btn');
+
+        if (selectedAnswer === q.correct) {
+            feedback.innerText = "Brawo! Prawidłowa odpowiedź.";
+            feedback.classList.add('correct');
+            allBtns.forEach(b => {
+                if (b.innerText === q.correct) b.classList.add('correct');
+            });
+        } else {
+            feedback.innerText = `Niestety źle. Prawidłowa odpowiedź to: ${q.correct}`;
+            feedback.classList.add('incorrect');
+            allBtns.forEach(b => {
+                if (b.innerText === q.correct) b.classList.add('correct');
+                if (b.innerText === selectedAnswer) b.classList.add('incorrect');
+            });
+        }
+
+        submitBtn.innerText = 'Dalej';
+    }
+
+    // Przejście do następnego pytania lub lekcji
+    function nextStep() {
+        currentQuestionIndex++;
+        if (currentQuestionIndex < lessonData.questions.length) {
+            loadQuestion();
+        } else {
+            // Zakończono lekcję, wczytaj następną
+            currentLesson++;
+            lessonTitle.innerText = "Ładowanie następnej lekcji...";
+            questionText.innerText = "";
+            optionsContainer.innerHTML = "";
+            submitBtn.disabled = true;
+            submitBtn.classList.remove('active');
+            progressFill.style.width = '100%';
+            loadLesson(currentLesson);
+        }
+    }
+
+    function finishCourse() {
+        lessonTitle.innerText = "Gratulacje!";
+        questionText.innerText = "Ukończyłeś wszystkie dostępne lekcje!";
+        optionsContainer.innerHTML = '';
+        submitBtn.innerText = 'Zacznij od nowa';
+        submitBtn.disabled = false;
+        submitBtn.classList.add('active');
+        submitBtn.onclick = () => {
+            currentLesson = 1;
+            loadLesson(1);
+        };
+    }
+
+    // Główna logika przycisku
+    submitBtn.onclick = () => {
+        if (!isAnswered) {
+            checkAnswer();
+        } else {
+            nextStep();
+        }
+    };
+
+    // Inicjalizacja aplikacji
+    loadLesson(1);
+
+</script>
+
+</body>
+</html>

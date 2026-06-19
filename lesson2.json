@@ -1,0 +1,20 @@
+{
+    "lessonTitle": "Lekcja 2: Zwierzęta",
+    "questions": [
+        {
+            "question": "Jak jest po angielsku 'Pies'?",
+            "options": ["Cat", "Dog", "Bird", "Fish"],
+            "correct": "Dog"
+        },
+        {
+            "question": "Jak jest po angielsku 'Kot'?",
+            "options": ["Dog", "Mouse", "Cat", "Horse"],
+            "correct": "Cat"
+        },
+        {
+            "question": "Jak jest po angielsku 'Koń'?",
+            "options": ["Cow", "Pig", "Sheep", "Horse"],
+            "correct": "Horse"
+        }
+    ]
+}
