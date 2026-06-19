@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dynamiczne widoki</title>
+
+<style>
+    body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+    }
+
+    .topbar {
+        display: flex;
+        background: #333;
+        padding: 10px;
+        gap: 10px;
+    }
+
+    .topbar button {
+        color: white;
+        background: #555;
+        border: none;
+        padding: 10px 20px;
+        cursor: pointer;
+        transition: 0.2s;
+    }
+
+    .topbar button:hover {
+        background: #666;
+    }
+
+    .topbar button.active {
+        background: #007bff;
+    }
+
+    .content {
+        padding: 20px;
+    }
+
+    .card {
+        padding: 20px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        background: #f8f8f8;
+    }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+    <button onclick="showView('a')" id="btn-a">Sekcja A</button>
+    <button onclick="showView('b')" id="btn-b">Sekcja B</button>
+    <button onclick="showView('c')" id="btn-c">Sekcja C</button>
+</div>
+
+<div class="content">
+    <div id="app"></div>
+</div>
+
+<script>
+    function renderA() {
+        return `
+            <div class="card">
+                <h2>Sekcja A</h2>
+                <p>Treść dla A</p>
+            </div>
+        `;
+    }
+
+    function renderB() {
+        return `
+            <div class="card">
+                <h2>Sekcja B</h2>
+                <p>Treść dla B</p>
+            </div>
+        `;
+    }
+
+    function renderC() {
+        return `
+            <div class="card">
+                <h2>Sekcja C</h2>
+                <p>Treść dla C</p>
+            </div>
+        `;
+    }
+
+    function showView(view) {
+        const app = document.getElementById('app');
+
+        // aktywny przycisk
+        document.querySelectorAll('.topbar button')
+            .forEach(btn => btn.classList.remove('active'));
+
+        document.getElementById('btn-' + view)
+            .classList.add('active');
+
+        // render tylko aktywnego widoku
+        switch (view) {
+            case 'a':
+                app.innerHTML = renderA();
+                break;
+
+            case 'b':
+                app.innerHTML = renderB();
+                break;
+
+            case 'c':
+                app.innerHTML = renderC();
+                break;
+        }
+    }
+
+    // widok startowy
+    showView('a');
+</script>
+
+</body>
+</html>
