@@ -1,0 +1,21 @@
+{
+    "courses": [
+        {
+            "id": "english",
+            "name": "Język Angielski",
+            "icon": "🇬🇧",
+            "lessons": [
+                { "id": "en_1", "title": "Podstawy", "file": "en_1.json" },
+                { "id": "en_2", "title": "Zwierzęta", "file": "en_2.json" }
+            ]
+        },
+        {
+            "id": "programming",
+            "name": "Programowanie JS",
+            "icon": "💻",
+            "lessons": [
+                { "id": "js_1", "title": "Zmienne", "file": "js_1.json" }
+            ]
+        }
+    ]
+}

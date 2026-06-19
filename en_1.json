@@ -1,0 +1,7 @@
+{
+    "lessonTitle": "Angielski: Podstawy",
+    "questions": [
+        { "question": "Jak jest 'Cześć'?", "options": ["Hello", "Bye", "Thanks", "Please"], "correct": "Hello" },
+        { "question": "Jak jest 'Dziękuję'?", "options": ["Sorry", "Yes", "Thank you", "No"], "correct": "Thank you" }
+    ]
+}

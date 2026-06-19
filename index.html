@@ -3,297 +3,258 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MojeLingo - Nauka języka</title>
+    <title>MojeLingo Pro</title>
     <style>
-        :root {
-            --primary: #58cc02;
-            --primary-dark: #58a700;
-            --error: #ff4b4b;
-            --bg: #fff;
-            --text: #3c3c3c;
-        }
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f7f7f7;
-            color: var(--text);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            margin: 0;
-        }
-        .app-container {
-            background: var(--bg);
-            border-radius: 16px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-            padding: 30px;
-            width: 100%;
-            max-width: 450px;
-            text-align: center;
-        }
-        .progress-bar {
-            width: 100%;
-            height: 12px;
-            background-color: #e5e5e5;
-            border-radius: 6px;
-            margin-bottom: 20px;
-            overflow: hidden;
-        }
-        .progress-fill {
-            height: 100%;
-            background-color: var(--primary);
-            width: 0%;
-            transition: width 0.3s ease;
-            border-radius: 6px;
-        }
-        h2 {
-            color: var(--text);
-            font-size: 20px;
-            margin-bottom: 10px;
-        }
-        .question {
-            font-size: 28px;
-            font-weight: bold;
-            margin: 20px 0;
-        }
-        .options-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-        .btn {
-            padding: 15px;
-            border: 2px solid #e5e5e5;
-            background: var(--bg);
-            border-radius: 12px;
-            font-size: 16px;
-            font-weight: bold;
-            color: var(--text);
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-        .btn:hover {
-            border-color: #b0b0b0;
-        }
-        .btn.correct {
-            border-color: var(--primary);
-            background-color: #d7ffb8;
-            color: var(--primary-dark);
-        }
-        .btn.incorrect {
-            border-color: var(--error);
-            background-color: #ffdada;
-            color: var(--error);
-        }
-        .btn:disabled {
-            cursor: not-allowed;
-        }
-        .submit-btn {
-            width: 100%;
-            padding: 15px;
-            background-color: #e5e5e5;
-            color: #afafaf;
-            border: none;
-            border-radius: 12px;
-            font-size: 18px;
-            font-weight: bold;
-            cursor: pointer;
-            margin-top: 10px;
-        }
-        .submit-btn.active {
-            background-color: var(--primary);
-            color: white;
-            box-shadow: 0 4px 0 var(--primary-dark);
-        }
-        .feedback {
-            margin-top: 15px;
-            padding: 10px;
-            border-radius: 8px;
-            font-weight: bold;
-            display: none;
-        }
-        .feedback.correct {
-            background-color: #e7f9d4;
-            color: var(--primary-dark);
-            display: block;
-        }
-        .feedback.incorrect {
-            background-color: #ffdada;
-            color: var(--error);
-            display: block;
-        }
+        :root { --primary: #58cc02; --primary-dark: #58a700; --error: #ff4b4b; --bg: #fff; --text: #3c3c3c; --border: #e5e5e5; }
+        body { font-family: sans-serif; background: #f7f7f7; color: var(--text); margin: 0; padding: 20px; display: flex; justify-content: center; }
+        .container { width: 100%; max-width: 500px; background: var(--bg); border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); padding: 20px; box-sizing: border-box; }
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 2px solid var(--border); padding-bottom: 10px; }
+        .tabs { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
+        .tab { padding: 8px 16px; border: 2px solid var(--border); background: #fff; border-radius: 12px; cursor: pointer; font-weight: bold; }
+        .tab.active { border-color: var(--primary); color: var(--primary-dark); background: #e7f9d4; }
+        .tree { display: flex; flex-direction: column; align-items: center; gap: 30px; padding: 20px 0; }
+        .node { width: 80px; height: 80px; border-radius: 50%; border: 3px solid var(--border); background: #fff; display: flex; align-items: center; justify-content: center; font-size: 24px; cursor: pointer; position: relative; transition: 0.2s; }
+        .node:hover { transform: scale(1.1); border-color: #b0b0b0; }
+        .node.completed { border-color: var(--primary); background: var(--primary); color: #fff; box-shadow: 0 4px 0 var(--primary-dark); }
+        .node:not(:last-child)::after { content: ''; position: absolute; bottom: -30px; width: 4px; height: 30px; background: var(--border); }
+        .tooltip { visibility: hidden; width: 120px; background: #333; color: #fff; text-align: center; border-radius: 6px; padding: 5px; position: absolute; z-index: 1; bottom: 100%; left: 50%; margin-left: -60px; font-size: 12px; }
+        .node:hover .tooltip { visibility: visible; }
+        .hidden { display: none !important; }
+        .progress-bar { width: 100%; height: 12px; background: var(--border); border-radius: 6px; margin-bottom: 20px; overflow: hidden; }
+        .progress-fill { height: 100%; background: var(--primary); width: 0%; transition: width 0.3s; }
+        .question { font-size: 24px; font-weight: bold; margin: 20px 0; text-align: center; }
+        .options { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
+        .btn { padding: 15px; border: 2px solid var(--border); background: #fff; border-radius: 12px; font-weight: bold; cursor: pointer; }
+        .btn.correct { border-color: var(--primary); background: #d7ffb8; color: var(--primary-dark); }
+        .btn.incorrect { border-color: var(--error); background: #ffdada; color: var(--error); }
+        .submit { width: 100%; padding: 15px; background: #e5e5e5; color: #afafaf; border: none; border-radius: 12px; font-weight: bold; font-size: 16px; cursor: pointer; }
+        .submit.active { background: var(--primary); color: #fff; box-shadow: 0 4px 0 var(--primary-dark); }
+        .feedback { margin-top: 15px; padding: 10px; border-radius: 8px; font-weight: bold; text-align: center; }
+        .feedback.correct { background: #e7f9d4; color: var(--primary-dark); }
+        .feedback.incorrect { background: #ffdada; color: var(--error); }
     </style>
 </head>
 <body>
 
-<div class="app-container">
-    <div class="progress-bar">
-        <div class="progress-fill" id="progressFill"></div>
+<div class="container">
+    <div id="homeView">
+        <div class="header">
+            <h2>Wybierz kurs</h2>
+            <button class="tab" onclick="resetProgress()">Reset</button>
+        </div>
+        <div class="tabs" id="courseTabs"></div>
+        <div class="tree" id="lessonTree"></div>
     </div>
-    
-    <h2 id="lessonTitle">Ładowanie lekcji...</h2>
-    <div class="question" id="questionText">Proszę czekać</div>
-    
-    <div class="options-grid" id="optionsContainer"></div>
-    
-    <div class="feedback" id="feedback"></div>
-    
-    <button class="submit-btn" id="submitBtn" disabled>Sprawdź</button>
+
+    <div id="quizView" class="hidden">
+        <div class="header">
+            <button onclick="showHome()">← Wróć</button>
+            <h2 id="quizTitle"></h2>
+        </div>
+        <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+        <div class="question" id="questionText"></div>
+        <div class="options" id="optionsContainer"></div>
+        <div class="feedback hidden" id="feedback"></div>
+        <button class="submit" id="submitBtn" disabled>Sprawdź</button>
+    </div>
 </div>
 
 <script>
-    let currentLesson = 1;
+    // Zmienne globalne stanu aplikacji
+    let manifest = null;
+    let progress = JSON.parse(localStorage.getItem('mojelingo_progress') || '{}');
+    let currentCourseId = null;
+    let currentLessonData = null;
     let currentQuestionIndex = 0;
-    let lessonData = null;
     let selectedAnswer = null;
     let isAnswered = false;
+    let correctCount = 0;
 
-    const lessonTitle = document.getElementById('lessonTitle');
-    const questionText = document.getElementById('questionText');
-    const optionsContainer = document.getElementById('optionsContainer');
-    const submitBtn = document.getElementById('submitBtn');
-    const feedback = document.getElementById('feedback');
-    const progressFill = document.getElementById('progressFill');
-
-    // Funkcja wczytująca plik JSON
-    async function loadLesson(lessonNumber) {
+    // --- INICJALIZACJA ---
+    async function initApp() {
         try {
-            const response = await fetch(`lesson${lessonNumber}.json`);
-            if (!response.ok) {
-                // Jeśli nie ma kolejnego pliku JSON, zakończ kurs
-                finishCourse();
-                return;
-            }
-            lessonData = await response.json();
-            currentQuestionIndex = 0;
-            lessonTitle.innerText = lessonData.lessonTitle;
-            loadQuestion();
+            const response = await fetch('manifest.json');
+            manifest = await response.json();
+            renderCourseTabs();
         } catch (error) {
-            console.error("Błąd wczytywania lekcji:", error);
-            finishCourse();
+            document.getElementById('lessonTree').innerText = "Błąd ładowania manifestu!";
         }
     }
 
-    // Funkcja ładująca pojedyncze pytanie
-    function loadQuestion() {
+    // --- WIDOK GŁÓWNY (DRZEWO) ---
+    function renderCourseTabs() {
+        const tabs = document.getElementById('courseTabs');
+        tabs.innerHTML = '';
+        if (!currentCourseId && manifest.courses.length > 0) currentCourseId = manifest.courses[0].id;
+        manifest.courses.forEach(course => {
+            const tab = document.createElement('div');
+            tab.innerText = `${course.icon} ${course.name}`;
+            tab.className = `tab ${course.id === currentCourseId ? 'active' : ''}`;
+            tab.onclick = () => { currentCourseId = course.id; renderCourseTabs(); renderLessonTree(); };
+            tabs.appendChild(tab);
+        });
+        renderLessonTree();
+    }
+
+    function renderLessonTree() {
+        const tree = document.getElementById('lessonTree');
+        tree.innerHTML = '';
+        const course = manifest.courses.find(c => c.id === currentCourseId);
+        if (!course) return;
+        course.lessons.forEach((lesson, index) => {
+            tree.appendChild(createNode(lesson, index));
+        });
+    }
+
+    function createNode(lesson, index) {
+        const node = document.createElement('div');
+        const prog = progress[currentCourseId]?.[lesson.id] || {};
+        node.className = `node ${prog.completed ? 'completed' : ''}`;
+        node.innerHTML = `⭐<span class="tooltip">${prog.completed ? `Poprawność: ${prog.accuracy}%` : 'Nieukończona'}</span>`;
+        if (index === 0 || progress[currentCourseId]?.[course.lessons[index-1].id]?.completed) node.style.cursor = 'pointer';
+        else node.style.opacity = '0.5'; // Blokada kolejnych lekcji
+        node.onclick = () => startLesson(lesson);
+        return node;
+    }
+
+    // --- LOGIKA QUIZU ---
+    async function startLesson(lesson) {
+        try {
+            const res = await fetch(lesson.file);
+            currentLessonData = await res.json();
+            currentQuestionIndex = 0;
+            correctCount = 0;
+            document.getElementById('quizTitle').innerText = currentLessonData.lessonTitle;
+            showView('quizView');
+            renderQuestion();
+        } catch (e) { alert("Nie znaleziono pliku lekcji!"); }
+    }
+
+    function renderQuestion() {
         isAnswered = false;
         selectedAnswer = null;
-        
-        // Aktualizacja paska postępu
-        const progress = (currentQuestionIndex / lessonData.questions.length) * 100;
-        progressFill.style.width = `${progress}%`;
-
-        const q = lessonData.questions[currentQuestionIndex];
-        questionText.innerText = q.question;
-
-        // Wyczyszczenie poprzednich opcji i feedbacku
-        optionsContainer.innerHTML = '';
-        feedback.className = 'feedback';
-        feedback.innerText = '';
-        submitBtn.innerText = 'Sprawdź';
-        submitBtn.disabled = true;
-        submitBtn.classList.remove('active');
-
-        // Tworzenie przycisków z odpowiedziami
-        q.options.forEach(option => {
+        const q = currentLessonData.questions[currentQuestionIndex];
+        document.getElementById('questionText').innerText = q.question;
+        const container = document.getElementById('optionsContainer');
+        container.innerHTML = '';
+        q.options.forEach(opt => {
             const btn = document.createElement('button');
-            btn.innerText = option;
-            btn.classList.add('btn');
-            btn.onclick = () => selectAnswer(btn, option);
-            optionsContainer.appendChild(btn);
+            btn.className = 'btn';
+            btn.innerText = opt;
+            btn.onclick = () => selectAnswer(btn, opt);
+            container.appendChild(btn);
         });
+        updateProgressBar();
+        resetFeedbackUI();
     }
 
-    // Funkcja zaznaczająca odpowiedź
-    function selectAnswer(btnElement, answer) {
-        if (isAnswered) return; // Blokada po odpowiedzi
-
+    function selectAnswer(btn, answer) {
+        if (isAnswered) return;
         selectedAnswer = answer;
-        
-        // Odznacz wszystkie, zaznacz wybraną
-        const allBtns = optionsContainer.querySelectorAll('.btn');
-        allBtns.forEach(b => {
-            b.style.backgroundColor = '';
-            b.style.borderColor = '#e5e5e5';
-        });
-        btnElement.style.borderColor = '#b0b0b0';
-        btnElement.style.backgroundColor = '#f0f0f0';
-
-        submitBtn.disabled = false;
-        submitBtn.classList.add('active');
+        document.querySelectorAll('.options .btn').forEach(b => b.style.borderColor = '#e5e5e5');
+        btn.style.borderColor = '#b0b0b0';
+        const submit = document.getElementById('submitBtn');
+        submit.disabled = false;
+        submit.classList.add('active');
     }
 
-    // Funkcja sprawdzająca odpowiedź
+    function handleSubmit() {
+        if (!isAnswered) checkAnswer();
+        else nextStep();
+    }
+
     function checkAnswer() {
         if (!selectedAnswer) return;
-
         isAnswered = true;
-        const q = lessonData.questions[currentQuestionIndex];
-        const allBtns = optionsContainer.querySelectorAll('.btn');
-
+        const q = currentLessonData.questions[currentQuestionIndex];
+        const btns = document.querySelectorAll('.options .btn');
+        const feedback = document.getElementById('feedback');
+        feedback.classList.remove('hidden');
         if (selectedAnswer === q.correct) {
-            feedback.innerText = "Brawo! Prawidłowa odpowiedź.";
-            feedback.classList.add('correct');
-            allBtns.forEach(b => {
-                if (b.innerText === q.correct) b.classList.add('correct');
-            });
+            correctCount++;
+            feedback.innerText = "Brawo!";
+            feedback.className = 'feedback correct';
+            btns.forEach(b => { if (b.innerText === q.correct) b.classList.add('correct'); });
         } else {
-            feedback.innerText = `Niestety źle. Prawidłowa odpowiedź to: ${q.correct}`;
-            feedback.classList.add('incorrect');
-            allBtns.forEach(b => {
+            feedback.innerText = `Źle. Poprawna to: ${q.correct}`;
+            feedback.className = 'feedback incorrect';
+            btns.forEach(b => {
                 if (b.innerText === q.correct) b.classList.add('correct');
                 if (b.innerText === selectedAnswer) b.classList.add('incorrect');
             });
         }
-
-        submitBtn.innerText = 'Dalej';
+        const submit = document.getElementById('submitBtn');
+        submit.innerText = 'Dalej';
     }
 
-    // Przejście do następnego pytania lub lekcji
     function nextStep() {
         currentQuestionIndex++;
-        if (currentQuestionIndex < lessonData.questions.length) {
-            loadQuestion();
+        if (currentQuestionIndex < currentLessonData.questions.length) {
+            renderQuestion();
         } else {
-            // Zakończono lekcję, wczytaj następną
-            currentLesson++;
-            lessonTitle.innerText = "Ładowanie następnej lekcji...";
-            questionText.innerText = "";
-            optionsContainer.innerHTML = "";
-            submitBtn.disabled = true;
-            submitBtn.classList.remove('active');
-            progressFill.style.width = '100%';
-            loadLesson(currentLesson);
+            finishLesson();
         }
     }
 
-    function finishCourse() {
-        lessonTitle.innerText = "Gratulacje!";
-        questionText.innerText = "Ukończyłeś wszystkie dostępne lekcje!";
-        optionsContainer.innerHTML = '';
-        submitBtn.innerText = 'Zacznij od nowa';
-        submitBtn.disabled = false;
-        submitBtn.classList.add('active');
-        submitBtn.onclick = () => {
-            currentLesson = 1;
-            loadLesson(1);
-        };
+    function finishLesson() {
+        const accuracy = Math.round((correctCount / currentLessonData.questions.length) * 100);
+        if (!progress[currentCourseId]) progress[currentCourseId] = {};
+        const course = manifest.courses.find(c => c.id === currentCourseId);
+        const lesson = course.lessons[currentQuestionIndex]; // Uwaga: currentQuestionIndex to teraz max
+        // Poprawka: musimy zapisać postęp dla konkretnej lekcji
+        // (W uproszczeniu: zakładamy, że właśnie skończyliśmy lekcję z drzewa)
+        // Aby kod był prosty, przekażemy ID lekcji w zmiennej globalnej podczas startLesson
+        saveLessonProgress(accuracy);
+        alert(`Ukończono! Twój wynik: ${accuracy}%`);
+        showHome();
     }
 
-    // Główna logika przycisku
-    submitBtn.onclick = () => {
-        if (!isAnswered) {
-            checkAnswer();
-        } else {
-            nextStep();
-        }
-    };
+    let currentLessonId = null; // Dodana zmienna pomocnicza
+    function startLesson(lesson) {
+        currentLessonId = lesson.id;
+        fetch(lesson.file).then(res => res.json()).then(data => {
+            currentLessonData = data;
+            currentQuestionIndex = 0;
+            correctCount = 0;
+            document.getElementById('quizTitle').innerText = data.lessonTitle;
+            showView('quizView');
+            renderQuestion();
+        }).catch(() => alert("Błąd ładowania lekcji!"));
+    }
 
-    // Inicjalizacja aplikacji
-    loadLesson(1);
+    function saveLessonProgress(accuracy) {
+        if (!progress[currentCourseId]) progress[currentCourseId] = {};
+        progress[currentCourseId][currentLessonId] = { completed: true, accuracy: accuracy };
+        localStorage.setItem('mojelingo_progress', JSON.stringify(progress));
+    }
 
+    // --- POMOCNICZE UI ---
+    function updateProgressBar() {
+        const total = currentLessonData.questions.length;
+        const prog = (currentQuestionIndex / total) * 100;
+        document.getElementById('progressFill').style.width = `${prog}%`;
+    }
+
+    function resetFeedbackUI() {
+        const feedback = document.getElementById('feedback');
+        feedback.className = 'feedback hidden';
+        feedback.innerText = '';
+        const submit = document.getElementById('submitBtn');
+        submit.innerText = 'Sprawdź';
+        submit.disabled = true;
+        submit.classList.remove('active');
+    }
+
+    function showView(viewId) {
+        document.getElementById('homeView').classList.toggle('hidden', viewId !== 'homeView');
+        document.getElementById('quizView').classList.toggle('hidden', viewId !== 'quizView');
+    }
+
+    function showHome() { showView('homeView'); renderLessonTree(); }
+    function resetProgress() { localStorage.removeItem('mojelingo_progress'); progress = {}; renderLessonTree(); }
+
+    document.getElementById('submitBtn').onclick = handleSubmit;
+    initApp();
 </script>
-
 </body>
 </html>
