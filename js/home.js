@@ -1,9 +1,12 @@
-// --- WIDOK GŁÓWNY: panele, lista kursów, drzewo lekcji ---
+// --- WIDOK GŁÓWNY: zakładki, drzewo lekcji ---
 
-function togglePanel(panelId) {
-    document.querySelectorAll('.panel').forEach(p =>
-        p.classList.toggle('show', p.id === panelId && !p.classList.contains('show'))
-    );
+function showTab(tabName) {
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('show'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    const panelMap = { lessons: 'lessonsPanel', courses: 'coursePanel', difficulty: 'diffPanel', settings: 'settingsPanel' };
+    const panelId = panelMap[tabName];
+    if (panelId) document.getElementById(panelId).classList.add('show');
+    document.getElementById('tab-' + tabName).classList.add('active');
 }
 
 function toggleQuestionType(type) {
@@ -29,12 +32,11 @@ function renderCourseList() {
         item.innerText = `${course.icon} ${course.name}`;
         item.onclick = () => {
             currentCourseId = course.id;
-            togglePanel('coursePanel');
             renderLessonTree();
         };
         list.appendChild(item);
     });
-    togglePanel('coursePanel');
+    showTab('courses');
 }
 
 function renderLessonTree() {
@@ -42,7 +44,7 @@ function renderLessonTree() {
     tree.innerHTML = '';
     const course = manifest.courses.find(c => c.id === currentCourseId);
     if (!course) return;
-    let prevCompleted = true; // Pierwsza lekcja zawsze odblokowana
+    let prevCompleted = true;
     course.lessons.forEach((lesson, index) => {
         tree.appendChild(createNode(lesson, index, prevCompleted));
         prevCompleted = progress[currentCourseId]?.[lesson.id]?.completed;

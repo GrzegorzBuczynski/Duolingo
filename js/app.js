@@ -6,6 +6,7 @@ async function initApp() {
         manifest = await response.json();
         currentCourseId = manifest.courses[0].id;
         syncDifficultyCheckboxes();
+        showTab('lessons');
         renderLessonTree();
     } catch (error) {
         document.getElementById('lessonTree').innerText = "Błąd ładowania manifestu!";
@@ -14,11 +15,13 @@ async function initApp() {
 
 // Bindowanie eventów (zastępuje atrybuty onclick w HTML)
 document.addEventListener('DOMContentLoaded', () => {
-    // Przyciski nagłówka — panele
-    document.getElementById('btnCourse').onclick = () => togglePanel('coursePanel');
-    document.getElementById('btnDifficulty').onclick = () => togglePanel('diffPanel');
+    // Przyciski zakładek
+    document.getElementById('tab-lessons').onclick = () => { renderLessonTree(); showTab('lessons'); };
+    document.getElementById('tab-courses').onclick = () => { renderCourseList(); };
+    document.getElementById('tab-difficulty').onclick = () => showTab('difficulty');
+    document.getElementById('tab-settings').onclick = () => showTab('settings');
 
-    // Przyciski nagłówka — zapis / wczytaj / reset
+    // Przyciski ustawień — zapis / wczytaj / reset
     document.getElementById('btnExport').onclick = exportData;
     document.getElementById('btnImport').onclick = () => document.getElementById('importFile').click();
     document.getElementById('btnReset').onclick = resetProgress;

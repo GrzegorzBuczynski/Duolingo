@@ -39,6 +39,16 @@ body {
 
 .btn-group { display: flex; gap: 5px; flex-wrap: wrap; }
 
+/* Pasek zakładek */
+.topbar { display: flex; gap: 5px; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 2px solid var(--border); }
+.tab-btn { flex: 1; padding: 10px; font-size: 22px; background: #fff; border: 2px solid var(--border); border-radius: 8px; cursor: pointer; transition: 0.2s; }
+.tab-btn:hover { border-color: #b0b0b0; }
+.tab-btn.active { border-color: var(--primary); background: #e7f9d4; }
+
+/* Akcje w panelu ustawień */
+.settings-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+.settings-actions .btn { flex: 1; text-align: center; }
+
 .btn {
     padding: 8px 12px;
     border: 2px solid var(--border);

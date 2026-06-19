@@ -10,25 +10,24 @@
 
 <div class="container">
     <div id="homeView">
-        <div class="header">
-            <div class="btn-group">
-                <button class="btn" id="btnCourse">Wybierz Kurs</button>
-                <button class="btn" id="btnDifficulty">Trudność</button>
-            </div>
-            <div class="btn-group">
-                <button class="btn" id="btnExport">Zapisz</button>
-                <button class="btn" id="btnImport">Wczytaj</button>
-                <button class="btn danger" id="btnReset">Reset</button>
-            </div>
+        <div class="topbar">
+            <button class="tab-btn" id="tab-lessons" title="Lekcje">📖</button>
+            <button class="tab-btn" id="tab-courses" title="Wybierz kurs">📚</button>
+            <button class="tab-btn" id="tab-difficulty" title="Trudność">🪜</button>
+            <button class="tab-btn" id="tab-settings" title="Ustawienia">⚙️</button>
         </div>
 
         <input type="file" id="importFile" accept=".json" style="display:none">
 
-        <div id="coursePanel" class="panel">
+        <div id="lessonsPanel" class="panel tab-panel">
+            <div class="tree" id="lessonTree"></div>
+        </div>
+
+        <div id="coursePanel" class="panel tab-panel">
             <div class="course-list" id="courseList"></div>
         </div>
 
-        <div id="diffPanel" class="panel">
+        <div id="diffPanel" class="panel tab-panel">
             <div style="display:flex; flex-direction:column; gap:10px;">
                 <label><input type="checkbox" id="diff_multiple" checked> Wielokrotny wybór</label>
                 <label><input type="checkbox" id="diff_word" checked> Bloczki tekstowe</label>
@@ -36,7 +35,13 @@
             </div>
         </div>
 
-        <div class="tree" id="lessonTree"></div>
+        <div id="settingsPanel" class="panel tab-panel">
+            <div class="settings-actions">
+                <button class="btn" id="btnExport">Zapisz</button>
+                <button class="btn" id="btnImport">Wczytaj</button>
+                <button class="btn danger" id="btnReset">Reset</button>
+            </div>
+        </div>
     </div>
 
     <div id="quizView" class="hidden">
