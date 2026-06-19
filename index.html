@@ -4,44 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MojeLingo Pro</title>
-    <style>
-        :root { --primary: #58cc02; --primary-dark: #58a700; --error: #ff4b4b; --bg: #fff; --text: #3c3c3c; --border: #e5e5e5; }
-        body { font-family: sans-serif; background: #f7f7f7; color: var(--text); margin: 0; padding: 20px; display: flex; justify-content: center; }
-        .container { width: 100%; max-width: 500px; background: var(--bg); border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); padding: 20px; box-sizing: border-box; position: relative; }
-        .header { display: flex; justify-content: space-between; margin-bottom: 20px; padding-bottom: 10px; border-bottom: 2px solid var(--border); gap: 5px; }
-        .btn-group { display: flex; gap: 5px; flex-wrap: wrap; }
-        .btn { padding: 8px 12px; border: 2px solid var(--border); background: #fff; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 14px; }
-        .btn.active { border-color: var(--primary); color: var(--primary-dark); background: #e7f9d4; }
-        .btn.danger { border-color: var(--error); color: var(--error); }
-        .panel { display: none; margin-bottom: 20px; padding: 15px; background: #f0f0f0; border-radius: 12px; }
-        .panel.show { display: block; }
-        .course-list { display: flex; flex-direction: column; gap: 10px; }
-        .course-item { padding: 10px; border: 2px solid var(--border); background: #fff; border-radius: 8px; cursor: pointer; text-align: center; }
-        .course-item:hover { border-color: var(--primary); }
-        .tree { display: flex; flex-direction: column; align-items: center; gap: 30px; padding: 20px 0; }
-        .node { width: 80px; height: 80px; border-radius: 50%; border: 3px solid var(--border); background: #fff; display: flex; align-items: center; justify-content: center; font-size: 24px; cursor: pointer; position: relative; transition: 0.2s; }
-        .node:hover { transform: scale(1.1); }
-        .node.completed { border-color: var(--primary); background: var(--primary); color: #fff; }
-        .node:not(:last-child)::after { content: ''; position: absolute; bottom: -30px; width: 4px; height: 30px; background: var(--border); }
-        .tooltip { visibility: hidden; width: 120px; background: #333; color: #fff; text-align: center; border-radius: 6px; padding: 5px; position: absolute; z-index: 1; bottom: 100%; left: 50%; margin-left: -60px; font-size: 12px; }
-        .node:hover .tooltip { visibility: visible; }
-        .hidden { display: none !important; }
-        .progress-bar { width: 100%; height: 12px; background: var(--border); border-radius: 6px; margin-bottom: 20px; overflow: hidden; }
-        .progress-fill { height: 100%; background: var(--primary); width: 0%; transition: width 0.3s; }
-        .question { font-size: 24px; font-weight: bold; margin: 20px 0; text-align: center; }
-        .options { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
-        .answer-btn { padding: 15px; border: 2px solid var(--border); background: #fff; border-radius: 12px; font-weight: bold; cursor: pointer; }
-        .answer-btn.correct { border-color: var(--primary); background: #d7ffb8; color: var(--primary-dark); }
-        .answer-btn.incorrect { border-color: var(--error); background: #ffdada; color: var(--error); }
-        .text-input { width: 100%; padding: 15px; font-size: 18px; border: 2px solid var(--border); border-radius: 12px; box-sizing: border-box; margin-bottom: 20px; text-align: center; }
-        .blocks-container { min-height: 60px; border: 2px dashed var(--border); border-radius: 12px; margin-bottom: 20px; padding: 10px; display: flex; flex-wrap: wrap; gap: 10px; }
-        .block-pool { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
-        .submit { width: 100%; padding: 15px; background: #e5e5e5; color: #afafaf; border: none; border-radius: 12px; font-weight: bold; font-size: 16px; cursor: pointer; }
-        .submit.active { background: var(--primary); color: #fff; box-shadow: 0 4px 0 var(--primary-dark); }
-        .feedback { margin-top: 15px; padding: 10px; border-radius: 8px; font-weight: bold; text-align: center; }
-        .feedback.correct { background: #e7f9d4; color: var(--primary-dark); }
-        .feedback.incorrect { background: #ffdada; color: var(--error); }
-    </style>
+    <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
 
@@ -49,17 +12,17 @@
     <div id="homeView">
         <div class="header">
             <div class="btn-group">
-                <button class="btn" onclick="togglePanel('coursePanel')">Wybierz Kurs</button>
-                <button class="btn" onclick="togglePanel('diffPanel')">Trudność</button>
+                <button class="btn" id="btnCourse">Wybierz Kurs</button>
+                <button class="btn" id="btnDifficulty">Trudność</button>
             </div>
             <div class="btn-group">
-                <button class="btn" onclick="exportData()">Zapisz</button>
-                <button class="btn" onclick="document.getElementById('importFile').click()">Wczytaj</button>
-                <button class="btn danger" onclick="resetProgress()">Reset</button>
+                <button class="btn" id="btnExport">Zapisz</button>
+                <button class="btn" id="btnImport">Wczytaj</button>
+                <button class="btn danger" id="btnReset">Reset</button>
             </div>
         </div>
 
-        <input type="file" id="importFile" accept=".json" style="display:none" onchange="handleFileImport(event)">
+        <input type="file" id="importFile" accept=".json" style="display:none">
 
         <div id="coursePanel" class="panel">
             <div class="course-list" id="courseList"></div>
@@ -67,9 +30,9 @@
 
         <div id="diffPanel" class="panel">
             <div style="display:flex; flex-direction:column; gap:10px;">
-                <label><input type="checkbox" id="diff_multiple" checked onchange="toggleQuestionType('multiple_choice')"> Wielokrotny wybór</label>
-                <label><input type="checkbox" id="diff_word" checked onchange="toggleQuestionType('word_blocks')"> Bloczki tekstowe</label>
-                <label><input type="checkbox" id="diff_typing" checked onchange="toggleQuestionType('typing')"> Wpisywanie</label>
+                <label><input type="checkbox" id="diff_multiple" checked> Wielokrotny wybór</label>
+                <label><input type="checkbox" id="diff_word" checked> Bloczki tekstowe</label>
+                <label><input type="checkbox" id="diff_typing" checked> Wpisywanie</label>
             </div>
         </div>
 
@@ -78,7 +41,7 @@
 
     <div id="quizView" class="hidden">
         <div class="header">
-            <button class="btn" onclick="showHome()">← Wróć</button>
+            <button class="btn" id="btnBack">← Wróć</button>
             <h2 id="quizTitle"></h2>
         </div>
         <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
@@ -89,294 +52,12 @@
     </div>
 </div>
 
-<script>
-    // --- STAN APLIKACJI ---
-    let manifest = null;
-    let progress = JSON.parse(localStorage.getItem('mojelingo_progress') || '{}');
-    let settings = JSON.parse(localStorage.getItem('mojelingo_settings') || '{"types":["multiple_choice","word_blocks","typing"]}');
-    let currentCourseId = null;
-    let currentLessonData = null;
-    let currentLessonId = null;
-    let currentQuestionIndex = 0;
-    let selectedAnswer = null;
-    let isAnswered = false;
-    let correctCount = 0;
-    let selectedBlocks = [];
-
-    // --- INICJALIZACJA ---
-    async function initApp() {
-        try {
-            const response = await fetch('manifest.json');
-            manifest = await response.json();
-            currentCourseId = manifest.courses[0].id;
-            syncDifficultyCheckboxes();
-            renderLessonTree();
-        } catch (error) {
-            document.getElementById('lessonTree').innerText = "Błąd ładowania manifestu!";
-        }
-    }
-
-    // --- WIDOK GŁÓWNY (PANELE I DRZEWO) ---
-    function togglePanel(panelId) {
-        document.querySelectorAll('.panel').forEach(p => p.classList.toggle('show', p.id === panelId && !p.classList.contains('show')));
-    }
-
-    function toggleQuestionType(type) {
-        const idx = settings.types.indexOf(type);
-        if (idx > -1) settings.types.splice(idx, 1);
-        else settings.types.push(type);
-        saveLocalState();
-        renderLessonTree();
-    }
-
-    function syncDifficultyCheckboxes() {
-        document.getElementById('diff_multiple').checked = settings.types.includes('multiple_choice');
-        document.getElementById('diff_word').checked = settings.types.includes('word_blocks');
-        document.getElementById('diff_typing').checked = settings.types.includes('typing');
-    }
-
-    function renderCourseList() {
-        const list = document.getElementById('courseList');
-        list.innerHTML = '';
-        manifest.courses.forEach(course => {
-            const item = document.createElement('div');
-            item.className = 'course-item';
-            item.innerText = `${course.icon} ${course.name}`;
-            item.onclick = () => { currentCourseId = course.id; togglePanel('coursePanel'); renderLessonTree(); };
-            list.appendChild(item);
-        });
-        togglePanel('coursePanel');
-    }
-
-    function renderLessonTree() {
-        const tree = document.getElementById('lessonTree');
-        tree.innerHTML = '';
-        const course = manifest.courses.find(c => c.id === currentCourseId);
-        if (!course) return;
-        let prevCompleted = true; // Pierwsza lekcja zawsze odblokowana
-        course.lessons.forEach((lesson, index) => {
-            tree.appendChild(createNode(lesson, index, prevCompleted));
-            prevCompleted = progress[currentCourseId]?.[lesson.id]?.completed;
-        });
-    }
-
-    function createNode(lesson, index, isUnlocked) {
-        const node = document.createElement('div');
-        const prog = progress[currentCourseId]?.[lesson.id] || {};
-        node.className = `node ${prog.completed ? 'completed' : ''}`;
-        node.style.opacity = isUnlocked ? '1' : '0.5';
-        node.innerHTML = `${index + 1}<span class="tooltip">${prog.completed ? `Poprawność: ${prog.accuracy}%` : 'Nieukończona'}</span>`;
-        if (isUnlocked) node.onclick = () => startLesson(lesson);
-        return node;
-    }
-
-    // --- LOGIKA QUIZU ---
-    async function startLesson(lesson) {
-        try {
-            const res = await fetch(lesson.file);
-            currentLessonData = await res.json();
-            currentLessonId = lesson.id;
-            currentQuestionIndex = 0;
-            correctCount = 0;
-            document.getElementById('quizTitle').innerText = currentLessonData.lessonTitle;
-            showView('quizView');
-            renderQuestion();
-        } catch (e) { alert("Błąd ładowania pliku lekcji!"); }
-    }
-
-    function getFilteredQuestions() {
-        return currentLessonData.questions.filter(q => settings.types.includes(q.type));
-    }
-
-    function renderQuestion() {
-        isAnswered = false; selectedAnswer = null; selectedBlocks = [];
-        const questions = getFilteredQuestions();
-        if (currentQuestionIndex >= questions.length) return finishLesson();
-        const q = questions[currentQuestionIndex];
-        document.getElementById('questionText').innerText = q.question;
-        document.getElementById('quizContent').innerHTML = '';
-        resetFeedbackUI();
-        if (q.type === 'multiple_choice') renderMultipleChoice(q);
-        else if (q.type === 'typing') renderTyping(q);
-        else if (q.type === 'word_blocks') renderWordBlocks(q);
-    }
-
-    function renderMultipleChoice(q) {
-        const container = document.getElementById('quizContent');
-        const grid = document.createElement('div');
-        grid.className = 'options';
-        q.options.forEach(opt => {
-            const btn = document.createElement('button');
-            btn.className = 'answer-btn'; btn.innerText = opt;
-            btn.onclick = () => selectMultipleChoice(btn, opt);
-            grid.appendChild(btn);
-        });
-        container.appendChild(grid);
-    }
-
-    function selectMultipleChoice(btn, answer) {
-        if (isAnswered) return;
-        selectedAnswer = answer;
-        document.querySelectorAll('.answer-btn').forEach(b => b.style.borderColor = '#e5e5e5');
-        btn.style.borderColor = '#b0b0b0';
-        toggleSubmitState(true);
-    }
-
-    function renderTyping(q) {
-        const container = document.getElementById('quizContent');
-        const input = document.createElement('input');
-        input.type = 'text'; input.className = 'text-input'; input.id = 'typingInput';
-        input.placeholder = "Wpisz odpowiedź...";
-        input.oninput = () => toggleSubmitState(input.value.trim().length > 0);
-        container.appendChild(input);
-    }
-
-    function renderWordBlocks(q) {
-        selectedBlocks = [];
-        const container = document.getElementById('quizContent');
-        const dropzone = document.createElement('div');
-        dropzone.className = 'blocks-container'; dropzone.id = 'blockDropzone';
-        dropzone.onclick = (e) => { if(e.target.className === 'block') removeBlock(e.target.innerText); };
-        
-        const pool = document.createElement('div');
-        pool.className = 'block-pool';
-        q.blocks.forEach(b => {
-            const block = document.createElement('div');
-            block.className = 'block'; block.innerText = b;
-            block.style.cssText = 'padding:10px 15px; border:2px solid var(--border); border-radius:8px; cursor:pointer; background:#fff; font-weight:bold;';
-            block.onclick = () => addBlock(b);
-            pool.appendChild(block);
-        });
-        container.appendChild(dropzone); container.appendChild(pool);
-    }
-
-    function addBlock(text) {
-        if (isAnswered) return;
-        selectedBlocks.push(text);
-        updateBlockDropzone();
-        toggleSubmitState(selectedBlocks.length > 0);
-    }
-
-    function removeBlock(text) {
-        if (isAnswered) return;
-        selectedBlocks = selectedBlocks.filter(b => b !== text);
-        updateBlockDropzone();
-        toggleSubmitState(selectedBlocks.length > 0);
-    }
-
-    function updateBlockDropzone() {
-        const dropzone = document.getElementById('blockDropzone');
-        dropzone.innerHTML = '';
-        selectedBlocks.forEach(b => {
-            const block = document.createElement('div');
-            block.className = 'block'; block.innerText = b;
-            block.style.cssText = 'padding:10px 15px; border:2px solid var(--primary); border-radius:8px; cursor:pointer; background:#e7f9d4; color:var(--primary-dark); font-weight:bold;';
-            dropzone.appendChild(block);
-        });
-    }
-
-    // --- SPRAWDZANIE I NAWIGACJA ---
-    function handleSubmit() {
-        if (!isAnswered) checkAnswer();
-        else nextStep();
-    }
-
-    function checkAnswer() {
-        const q = getFilteredQuestions()[currentQuestionIndex];
-        let isCorrect = false;
-        if (q.type === 'multiple_choice') isCorrect = selectedAnswer === q.correct;
-        else if (q.type === 'typing') isCorrect = q.correct.includes(document.getElementById('typingInput').value.trim());
-        else if (q.type === 'word_blocks') isCorrect = JSON.stringify(selectedBlocks) === JSON.stringify(q.correct_order);
-        if (isCorrect) correctCount++;
-        showFeedback(isCorrect, q);
-        isAnswered = true;
-        document.getElementById('submitBtn').innerText = 'Dalej';
-    }
-
-    function showFeedback(isCorrect, q) {
-        const feedback = document.getElementById('feedback');
-        feedback.className = `feedback ${isCorrect ? 'correct' : 'incorrect'}`;
-        feedback.classList.remove('hidden');
-        if (isCorrect) feedback.innerText = "Brawo! Prawidłowa odpowiedź.";
-        else {
-            let correctAns = q.type === 'multiple_choice' ? q.correct : (q.type === 'typing' ? q.correct[0] : q.correct_order.join(' '));
-            feedback.innerText = `Źle. Poprawna to: ${correctAns}`;
-        }
-    }
-
-    function nextStep() {
-        currentQuestionIndex++;
-        renderQuestion();
-    }
-
-    function finishLesson() {
-        const accuracy = Math.round((correctCount / getFilteredQuestions().length) * 100);
-        if (!progress[currentCourseId]) progress[currentCourseId] = {};
-        progress[currentCourseId][currentLessonId] = { completed: true, accuracy: accuracy };
-        saveLocalState();
-        alert(`Ukończono lekcję! Twój wynik: ${accuracy}%`);
-        showHome();
-    }
-
-    // --- ZAPIS / ODCZYT DO PLIKU ---
-    function exportData() {
-        const data = { progress: progress, settings: settings };
-        const blob = new Blob([JSON.stringify(data, null, 2)], {type: 'application/json'});
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url; a.download = 'mojelingo_zapis.json'; a.click();
-        URL.revokeObjectURL(url);
-    }
-
-    function handleFileImport(event) {
-        const file = event.target.files[0];
-        if (!file) return;
-        const reader = new FileReader();
-        reader.onload = (e) => {
-            try {
-                const data = JSON.parse(e.target.result);
-                if (data.progress) progress = data.progress;
-                if (data.settings) settings = data.settings;
-                saveLocalState(); syncDifficultyCheckboxes(); renderLessonTree();
-                alert("Wczytano pomyślnie!");
-            } catch (err) { alert("Błąd wczytywania pliku JSON"); }
-        };
-        reader.readAsText(file);
-        event.target.value = '';
-    }
-
-    // --- POMOCNICZE UI ---
-    function toggleSubmitState(isActive) {
-        const submit = document.getElementById('submitBtn');
-        submit.disabled = !isActive;
-        submit.classList.toggle('active', isActive);
-        if (!isAnswered) submit.innerText = 'Sprawdź';
-    }
-
-    function resetFeedbackUI() {
-        const feedback = document.getElementById('feedback');
-        feedback.className = 'feedback hidden'; feedback.innerText = '';
-        toggleSubmitState(false);
-    }
-
-    function saveLocalState() {
-        localStorage.setItem('mojelingo_progress', JSON.stringify(progress));
-        localStorage.setItem('mojelingo_settings', JSON.stringify(settings));
-    }
-
-    function showView(viewId) {
-        document.getElementById('homeView').classList.toggle('hidden', viewId !== 'homeView');
-        document.getElementById('quizView').classList.toggle('hidden', viewId !== 'quizView');
-    }
-
-    function showHome() { showView('homeView'); renderLessonTree(); }
-    function resetProgress() { localStorage.removeItem('mojelingo_progress'); progress = {}; renderLessonTree(); }
-
-    // Bindowanie eventów
-    document.getElementById('submitBtn').onclick = handleSubmit;
-    document.querySelector('.btn[onclick="togglePanel(\'coursePanel\')"]').onclick = () => togglePanel('coursePanel');
-    document.querySelector('.btn[onclick="togglePanel(\'diffPanel\')"]').onclick = () => togglePanel('diffPanel');
-    initApp();
-</script>
+<!-- Skrypty ładowane w kolejności zależności -->
+<script src="js/state.js"></script>
+<script src="js/storage.js"></script>
+<script src="js/ui.js"></script>
+<script src="js/home.js"></script>
+<script src="js/quiz.js"></script>
+<script src="js/app.js"></script>
 </body>
 </html>

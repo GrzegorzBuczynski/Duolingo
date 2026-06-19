@@ -1,0 +1,91 @@
+:root {
+    --primary: #58cc02;
+    --primary-dark: #58a700;
+    --error: #ff4b4b;
+    --bg: #fff;
+    --text: #3c3c3c;
+    --border: #e5e5e5;
+}
+
+body {
+    font-family: sans-serif;
+    background: #f7f7f7;
+    color: var(--text);
+    margin: 0;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+}
+
+.container {
+    width: 100%;
+    max-width: 500px;
+    background: var(--bg);
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    box-sizing: border-box;
+    position: relative;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid var(--border);
+    gap: 5px;
+}
+
+.btn-group { display: flex; gap: 5px; flex-wrap: wrap; }
+
+.btn {
+    padding: 8px 12px;
+    border: 2px solid var(--border);
+    background: #fff;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.btn.active { border-color: var(--primary); color: var(--primary-dark); background: #e7f9d4; }
+.btn.danger { border-color: var(--error); color: var(--error); }
+
+.panel { display: none; margin-bottom: 20px; padding: 15px; background: #f0f0f0; border-radius: 12px; }
+.panel.show { display: block; }
+
+.course-list { display: flex; flex-direction: column; gap: 10px; }
+.course-item { padding: 10px; border: 2px solid var(--border); background: #fff; border-radius: 8px; cursor: pointer; text-align: center; }
+.course-item:hover { border-color: var(--primary); }
+
+.tree { display: flex; flex-direction: column; align-items: center; gap: 30px; padding: 20px 0; }
+.node { width: 80px; height: 80px; border-radius: 50%; border: 3px solid var(--border); background: #fff; display: flex; align-items: center; justify-content: center; font-size: 24px; cursor: pointer; position: relative; transition: 0.2s; }
+.node:hover { transform: scale(1.1); }
+.node.completed { border-color: var(--primary); background: var(--primary); color: #fff; }
+.node:not(:last-child)::after { content: ''; position: absolute; bottom: -30px; width: 4px; height: 30px; background: var(--border); }
+.tooltip { visibility: hidden; width: 120px; background: #333; color: #fff; text-align: center; border-radius: 6px; padding: 5px; position: absolute; z-index: 1; bottom: 100%; left: 50%; margin-left: -60px; font-size: 12px; }
+.node:hover .tooltip { visibility: visible; }
+
+.hidden { display: none !important; }
+
+.progress-bar { width: 100%; height: 12px; background: var(--border); border-radius: 6px; margin-bottom: 20px; overflow: hidden; }
+.progress-fill { height: 100%; background: var(--primary); width: 0%; transition: width 0.3s; }
+
+.question { font-size: 24px; font-weight: bold; margin: 20px 0; text-align: center; }
+.options { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
+.answer-btn { padding: 15px; border: 2px solid var(--border); background: #fff; border-radius: 12px; font-weight: bold; cursor: pointer; }
+.answer-btn.correct { border-color: var(--primary); background: #d7ffb8; color: var(--primary-dark); }
+.answer-btn.incorrect { border-color: var(--error); background: #ffdada; color: var(--error); }
+
+.text-input { width: 100%; padding: 15px; font-size: 18px; border: 2px solid var(--border); border-radius: 12px; box-sizing: border-box; margin-bottom: 20px; text-align: center; }
+
+.blocks-container { min-height: 60px; border: 2px dashed var(--border); border-radius: 12px; margin-bottom: 20px; padding: 10px; display: flex; flex-wrap: wrap; gap: 10px; }
+.block-pool { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
+
+.submit { width: 100%; padding: 15px; background: #e5e5e5; color: #afafaf; border: none; border-radius: 12px; font-weight: bold; font-size: 16px; cursor: pointer; }
+.submit.active { background: var(--primary); color: #fff; box-shadow: 0 4px 0 var(--primary-dark); }
+
+.feedback { margin-top: 15px; padding: 10px; border-radius: 8px; font-weight: bold; text-align: center; }
+.feedback.correct { background: #e7f9d4; color: var(--primary-dark); }
+.feedback.incorrect { background: #ffdada; color: var(--error); }
