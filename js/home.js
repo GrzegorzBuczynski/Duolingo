@@ -28,11 +28,12 @@ function renderCourseList() {
     list.innerHTML = '';
     manifest.courses.forEach(course => {
         const item = document.createElement('div');
-        item.className = 'course-item';
+        item.className = 'course-item' + (course.id === currentCourseId ? ' active' : '');
         item.innerText = `${course.icon} ${course.name}`;
         item.onclick = () => {
             currentCourseId = course.id;
             renderLessonTree();
+            renderCourseList();
         };
         list.appendChild(item);
     });

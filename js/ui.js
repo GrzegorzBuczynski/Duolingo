@@ -14,12 +14,21 @@ function resetFeedbackUI() {
     toggleSubmitState(false);
 }
 
-function showView(viewId) {
-    document.getElementById('homeView').classList.toggle('hidden', viewId !== 'homeView');
-    document.getElementById('quizView').classList.toggle('hidden', viewId !== 'quizView');
+// Przełącza topbar na tryb domowy (zakładki) i pokazuje panel lekcji
+function showHome() {
+    document.getElementById('topbarHome').classList.remove('hidden');
+    document.getElementById('topbarQuiz').classList.add('hidden');
+    document.getElementById('quizView').classList.add('hidden');
+    showTab('lessons');
+    renderLessonTree();
 }
 
-function showHome() {
-    showView('homeView');
-    renderLessonTree();
+// Przełącza topbar na tryb lekcji i pokazuje panel quizu
+function enterQuiz() {
+    document.getElementById('topbarHome').classList.add('hidden');
+    document.getElementById('topbarQuiz').classList.remove('hidden');
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('show'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('quizView').classList.remove('hidden');
+    document.getElementById('quizView').classList.add('show');
 }

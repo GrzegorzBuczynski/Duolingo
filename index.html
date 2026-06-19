@@ -9,14 +9,22 @@
 <body>
 
 <div class="container">
-    <div id="homeView">
-        <div class="topbar">
+    <!-- Topbar — zawsze widoczny, zawartość zależy od trybu -->
+    <div class="topbar">
+        <div id="topbarHome" class="topbar-content">
             <button class="tab-btn" id="tab-lessons" title="Lekcje">📖</button>
             <button class="tab-btn" id="tab-courses" title="Wybierz kurs">📚</button>
             <button class="tab-btn" id="tab-difficulty" title="Trudność">🪜</button>
             <button class="tab-btn" id="tab-settings" title="Ustawienia">⚙️</button>
         </div>
+        <div id="topbarQuiz" class="topbar-content hidden">
+            <button class="btn" id="btnBack">← Wróć</button>
+            <h2 id="quizTitle"></h2>
+        </div>
+    </div>
 
+    <!-- Obszar paneli — współdzielony przez zakładki i quiz -->
+    <div id="mainView">
         <input type="file" id="importFile" accept=".json" style="display:none">
 
         <div id="lessonsPanel" class="panel tab-panel">
@@ -42,18 +50,14 @@
                 <button class="btn danger" id="btnReset">Reset</button>
             </div>
         </div>
-    </div>
 
-    <div id="quizView" class="hidden">
-        <div class="header">
-            <button class="btn" id="btnBack">← Wróć</button>
-            <h2 id="quizTitle"></h2>
+        <div id="quizView" class="panel tab-panel hidden">
+            <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+            <div class="question" id="questionText"></div>
+            <div id="quizContent"></div>
+            <div class="feedback hidden" id="feedback"></div>
+            <button class="submit" id="submitBtn" disabled>Sprawdź</button>
         </div>
-        <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
-        <div class="question" id="questionText"></div>
-        <div id="quizContent"></div>
-        <div class="feedback hidden" id="feedback"></div>
-        <button class="submit" id="submitBtn" disabled>Sprawdź</button>
     </div>
 </div>
 

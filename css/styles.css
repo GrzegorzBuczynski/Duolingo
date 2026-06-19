@@ -15,17 +15,29 @@ body {
     padding: 20px;
     display: flex;
     justify-content: center;
+    height: 100vh;
+    box-sizing: border-box;
 }
 
 .container {
     width: 100%;
     max-width: 500px;
+    height: 100%;
     background: var(--bg);
     border-radius: 16px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
     padding: 20px;
     box-sizing: border-box;
     position: relative;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+/* Obszar paneli — przewijalny, topbar zawsze na górze */
+#mainView, #quizView {
+    flex: 1;
+    overflow-y: auto;
 }
 
 .header {
@@ -40,10 +52,13 @@ body {
 .btn-group { display: flex; gap: 5px; flex-wrap: wrap; }
 
 /* Pasek zakładek */
-.topbar { display: flex; gap: 5px; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 2px solid var(--border); }
+.topbar { display: flex; gap: 5px; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 2px solid var(--border); height: 10vh; flex-shrink: 0; }
+.topbar-content { display: flex; gap: 5px; flex: 1; align-items: center; }
+.topbar-content.hidden { display: none; }
+#topbarQuiz h2 { margin: 0; font-size: 18px; flex: 1; text-align: center; }
 .tab-btn { flex: 1; padding: 10px; font-size: 22px; background: #fff; border: 2px solid var(--border); border-radius: 8px; cursor: pointer; transition: 0.2s; }
 .tab-btn:hover { border-color: #b0b0b0; }
-.tab-btn.active { border-color: var(--primary); background: #e7f9d4; }
+.tab-btn.active, .course-item.active { border-color: var(--primary); background: #e7f9d4; }
 
 /* Akcje w panelu ustawień */
 .settings-actions { display: flex; gap: 8px; flex-wrap: wrap; }

@@ -8,7 +8,8 @@ async function startLesson(lesson) {
         currentQuestionIndex = 0;
         correctCount = 0;
         document.getElementById('quizTitle').innerText = currentLessonData.lessonTitle;
-        showView('quizView');
+
+        enterQuiz();
         renderQuestion();
     } catch (e) {
         alert("Błąd ładowania pliku lekcji!");
