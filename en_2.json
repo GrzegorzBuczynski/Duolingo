@@ -1,7 +1,6 @@
 {
     "lessonTitle": "Angielski: Zwierzęta",
     "questions": [
-        { "question": "Jak jest 'Pies'?", "options": ["Cat", "Dog", "Bird", "Fish"], "correct": "Dog" },
-        { "question": "Jak jest 'Kot'?", "options": ["Dog", "Mouse", "Cat", "Horse"], "correct": "Cat" }
+        { "type": "multiple_choice", "question": "Jak jest 'Kot'?", "options": ["Dog", "Cat", "Bird", "Fish"], "correct": "Cat" }
     ]
 }

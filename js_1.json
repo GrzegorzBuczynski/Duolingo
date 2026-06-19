@@ -1,7 +1,6 @@
 {
     "lessonTitle": "JS: Zmienne",
     "questions": [
-        { "question": "Jak deklarujemy stałą?", "options": ["let", "var", "const", "static"], "correct": "const" },
-        { "question": "Jak deklarujemy zmienną (nowoczesne JS)?", "options": ["let", "dim", "int", "def"], "correct": "let" }
+        { "type": "typing", "question": "Wpisz słowo kluczowe deklarujące stałą", "correct": ["const", "CONST"] }
     ]
 }

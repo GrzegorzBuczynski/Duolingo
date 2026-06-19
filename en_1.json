@@ -1,7 +1,8 @@
 {
-    "lessonTitle": "Angielski: Podstawy",
+    "lessonTitle": "Angielski: Mix zadań",
     "questions": [
-        { "question": "Jak jest 'Cześć'?", "options": ["Hello", "Bye", "Thanks", "Please"], "correct": "Hello" },
-        { "question": "Jak jest 'Dziękuję'?", "options": ["Sorry", "Yes", "Thank you", "No"], "correct": "Thank you" }
+        { "type": "multiple_choice", "question": "Jak jest 'Cześć'?", "options": ["Hello", "Bye", "Thanks", "Please"], "correct": "Hello" },
+        { "type": "typing", "question": "Wpisz po angielsku: 'Pies'", "correct": ["dog", "Dog"] },
+        { "type": "word_blocks", "question": "Ułóż zdanie: 'On ma psa'", "blocks": ["He", "has", "a", "dog", "cat", "is"], "correct_order": ["He", "has", "a", "dog"] }
     ]
 }
