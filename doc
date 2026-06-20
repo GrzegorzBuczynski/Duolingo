@@ -1,0 +1,38 @@
+make build up     # zbuduj i uruchom
+make logs         # podgląd logów
+make down         # zatrzymaj
+
+
+
+7. Jak to działa
+
+Po uruchomieniu:
+
+make dev
+
+masz:
+
+Frontend
+http://localhost:5173
+hot reload Vite
+Backend
+http://localhost:8080
+Spring Boot live reload (mvn spring-boot:run)
+API
+frontend woła:
+/api/users
+
+→ proxy → backend
+
+8. Co zyskujesz
+
+✔ brak rebuild Docker przy zmianach kodu
+✔ hot reload React (Vite HMR)
+✔ auto restart Spring Boot
+✔ jedna komenda startu
+✔ brak npm install lokalnie
+
+
+cd learning-app/infra
+docker compose restart backend
+docker compose -f learning-app/infra/docker-compose.yml restart backend
